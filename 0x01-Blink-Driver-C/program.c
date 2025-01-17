@@ -1,0 +1,45 @@
+/////////////////////////////////////////////////////////////////////
+// Project: ATmega328P Blink Driver
+/////////////////////////////////////////////////////////////////////
+// Author: Kevin Thomas
+// E-Mail: ket189@pitt.edu
+// Version: 1.0
+// Date: 12/26/24
+// Target Device: ATmega328P (Arduino Nano)
+// Clock Frequency: 16 MHz
+// Toolchain: AVR-GCC, AVRDUDE
+// License: Apache License 2.0
+// Description: This program toggles the onboard LED connected to PB5
+//              (Pin 13) on the Arduino Nano at 1-second intervals 
+//              using C. The delay is implemented using the AVR libc
+//              library.
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+// INCLUDES
+/////////////////////////////////////////////////////////////////////
+#include <avr/io.h>
+#include <util/delay.h>
+
+/////////////////////////////////////////////////////////////////////
+// DEFINES, MACROS, CONSTANTS
+/////////////////////////////////////////////////////////////////////
+#ifndef F_CPU
+#define F_CPU 16000000UL          // define clk freq (16 MHz)
+#endif
+
+/////////////////////////////////////////////////////////////////////
+// FUNCTIONS
+/////////////////////////////////////////////////////////////////////
+int main(void) {
+  DDRB |= (1 << PB5);             // set PB5 (D13) as output
+
+  while (1) {
+    PORTB |= (1 << PB5);          // LED on
+    _delay_ms(1000);              // 1s delay
+    PORTB &= ~(1 << PB5);         // LED off
+    _delay_ms(1000);              // 1s delay
+  }
+
+  return 0;
+}
