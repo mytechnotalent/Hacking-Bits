@@ -52,7 +52,7 @@ static void servo_write(uint8_t pos);
 int main(void) {
   timer1_init();                  // initialize Timer1 for PWM
 
-  // Control LEDs based on sweep delays
+  // control LEDs based on sweep delays
   #if (SWEEP_DELAY_UP == 5) && (SWEEP_DELAY_DOWN == 5)
     PORTD &= ~(1 << LED_D5);      // LED off at D5
     PORTD |= (1 << LED_D6);       // LED on at D6
