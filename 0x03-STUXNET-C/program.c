@@ -50,32 +50,32 @@ static void servo_write(uint8_t pos);
 // FUNCTIONS
 /////////////////////////////////////////////////////////////////////
 int main(void) {
-    timer1_init();                // initialize Timer1 for PWM
+  timer1_init();                  // initialize Timer1 for PWM
 
-    // Control LEDs based on sweep delays
-    #if (SWEEP_DELAY_UP == 5) && (SWEEP_DELAY_DOWN == 5)
-        PORTD &= ~(1 << LED_D6);  // LED off at D6
-        PORTD |= (1 << LED_D5);   // LED on at D5
-    #else
-        PORTD &= ~(1 << LED_D5);  // LED off at D5
-        PORTD |= (1 << LED_D6);   // LED on at D6
-    #endif
+  // Control LEDs based on sweep delays
+  #if (SWEEP_DELAY_UP == 5) && (SWEEP_DELAY_DOWN == 5)
+    PORTD &= ~(1 << LED_D5);      // LED off at D5
+    PORTD |= (1 << LED_D6);       // LED on at D6
+  #else
+    PORTD &= ~(1 << LED_D6);      // LED off at D6
+    PORTD |= (1 << LED_D5);       // LED on at D5
+  #endif
 
-    while (1) {
-        // sweep up from 0° to 180°
-        for (uint8_t pos = 0; pos <= 180; pos++) {
-            servo_write(pos);     // set servo position
-            _delay_ms(SWEEP_DELAY_UP);
-        }
-
-        // sweep down from 180° to 0°
-        for (uint8_t pos = 180; pos > 0; pos--) {
-            servo_write(pos);     // set servo position
-            _delay_ms(SWEEP_DELAY_DOWN);
-        }
+  while (1) {
+    // sweep up from 0° to 180°
+    for (uint8_t pos = 0; pos <= 180; pos++) {
+      servo_write(pos);           // set servo position
+      _delay_ms(SWEEP_DELAY_UP);
     }
 
-    return 0;
+    // sweep down from 180° to 0°
+    for (uint8_t pos = 180; pos > 0; pos--) {
+      servo_write(pos);           // set servo position
+      _delay_ms(SWEEP_DELAY_DOWN);
+    }
+  }
+
+  return 0;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -86,16 +86,16 @@ int main(void) {
 //              Also configures LEDs on D5 and D6 as outputs.
 /////////////////////////////////////////////////////////////////////
 static void timer1_init(void) {
-    // set PB1 (OC1A) as output and set PD5 and PD6 as outputs
-    DDRB |= (1 << PB1);           
-    DDRD |= (1 << LED_D5) | (1 << LED_D6); 
+  // set PB1 (OC1A) as output and set PD5 and PD6 as outputs
+  DDRB |= (1 << PB1);           
+  DDRD |= (1 << LED_D5) | (1 << LED_D6); 
 
-    // configure Timer1 for Fast PWM, TOP=ICR1, non-inverting mode
-    TCCR1A = (1 << COM1A1) | (1 << WGM11); 
-    TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS11); 
+  // configure Timer1 for Fast PWM, TOP=ICR1, non-inverting mode
+  TCCR1A = (1 << COM1A1) | (1 << WGM11); 
+  TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS11); 
 
-    // set ICR1 to 39999 for 20ms period
-    ICR1 = 39999;
+  // set ICR1 to 39999 for 20ms period
+  ICR1 = 39999;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -106,8 +106,9 @@ static void timer1_init(void) {
 //              (0° to 180°).
 /////////////////////////////////////////////////////////////////////
 static void servo_write(uint8_t pos) {
-    // calculate pulse width (ticks) for the given position
-    uint16_t pulse = SERVO_MIN + ((uint16_t)pos * SERVO_STEP);
-    if (pulse > SERVO_MAX) pulse = SERVO_MAX; 
-    OCR1A = pulse; 
+  // calculate pulse width (ticks) for the given position
+  uint16_t pulse = SERVO_MIN + ((uint16_t)pos * SERVO_STEP);
+  if (pulse > SERVO_MAX) 
+    pulse = SERVO_MAX; 
+  OCR1A = pulse; 
 }
